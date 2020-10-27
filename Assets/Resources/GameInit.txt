@@ -1,0 +1,9 @@
+[FRIEND]
+Awesome AWS-8Q,0,0,N
+Awesome AWS-8Q,-1,-1,NW
+Awesome AWS-8Q,1,-1,NE
+
+[ENEMY]
+Awesome AWS-8Q,0,5,S
+Awesome AWS-8Q,-1,6,SW
+Awesome AWS-8Q,1,6,SE
