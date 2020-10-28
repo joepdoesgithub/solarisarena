@@ -56,6 +56,7 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		TextParser.GetInitPlayerUnit(out s, out x, out y,out dir);
 		obj.GetComponent<UnitController>().SetUnit(s,x,y,dir);
 		obj.GetComponent<UnitController>().PrepTurn();
+		obj.GetComponent<SpriteRenderer>().sprite = UnitManager.GetUnitSprite(s);
 
 		GlobalFuncs.DrawStuff(obj);
 

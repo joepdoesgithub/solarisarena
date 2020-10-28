@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitManager : MonoBehaviour{
 	public bool FinishedInit = false;
@@ -26,6 +27,7 @@ public class UnitManager : MonoBehaviour{
 				obj.name = "Friendly_" + i;
 				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
 				obj.GetComponent<UnitController>().PrepTurn();
+				obj.GetComponent<SpriteRenderer>().sprite = GetUnitSprite(unitName);
 				friends.Add(obj);
 
 				GlobalFuncs.DrawStuff(obj);
@@ -33,9 +35,6 @@ public class UnitManager : MonoBehaviour{
 		}
 
 		ls = TextParser.GetAllEnemyLines();
-		foreach(string s in ls)
-			Debug.Log(s);
-
 		if(ls.Length > 0){
 			for(int i = 0;i<ls.Length; i++){
 				string unitName = ls[i].Split(',')[0];
@@ -47,6 +46,7 @@ public class UnitManager : MonoBehaviour{
 				obj.name = "Enemy_" + i;
 				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
 				obj.GetComponent<UnitController>().PrepTurn();
+				obj.GetComponent<SpriteRenderer>().sprite = GetUnitSprite(unitName);
 				enemies.Add(obj);
 
 				GlobalFuncs.DrawStuff(obj);
@@ -55,4 +55,13 @@ public class UnitManager : MonoBehaviour{
 
         FinishedInit = true;
     }
+
+	public static Sprite GetUnitSprite(string unitName){
+		Sprite unitSprite = Resources.Load<Sprite>("UnitImages/" + unitName);				
+		if(unitSprite == null)
+			unitSprite = Resources.Load<Sprite>("UnitImages/" + unitName.Split(' ')[0]);
+		if(unitSprite == null)
+			Debug.LogError(string.Format("UnitManager.GetUnitSprie: Can't load image with name {0}",unitName));
+		return unitSprite;
+	}
 }
