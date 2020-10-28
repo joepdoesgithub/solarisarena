@@ -13,6 +13,15 @@ public static class GlobalFuncs{
 		return i;
 	}
 
+	public static GameObject GetUnit(int ID){
+		List<GameObject> units = GameObject.Find("GameManager").GetComponent<GameManager>().GetAllUnits();
+		for(int i = 0;i<units.Count;i++){
+			if(units[i].GetComponent<UnitController>().ID == ID)
+				return units[i];
+		}
+		return null;
+	}
+
 	public static void DrawStuff(GameObject obj){
 		int x = obj.GetComponent<UnitController>().x;
 		int y = obj.GetComponent<UnitController>().y;

@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour{
 		run = (int)(1.5f * uc.unit.walk + 0.5f);
 		infoText.text = 
 				string.Format("Spd: {0} > {1}  Walk: {2}  Run:{3}\n",uc.speed,uc.newSpeed,uc.unit.walk,run) +
-				string.Format("Dir: {0} > {1}\n",GlobalFuncs.DirIntToStr(uc.mechDir),GlobalFuncs.DirIntToStr(uc.mechNewDir));
+				string.Format("Dir: {0} > {1}\n",GlobalFuncs.DirIntToStr(uc.mechDir),GlobalFuncs.DirIntToStr(uc.mechNewDir)) + 
+				"\n" + 
+				gameManager.GetComponent<GameManager>().GetTurnOrderString();
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UnitController : MonoBehaviour{
 	public int ID;
+	public int team;
 
 	public int x = 0;
 	public int y = 0;

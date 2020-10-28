@@ -28,6 +28,7 @@ public class UnitManager : MonoBehaviour{
 				GameObject obj = Instantiate(UnitPrefab);
 				obj.name = "Friendly_" + i;
 				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
+				obj.GetComponent<UnitController>().team = 1;
 				obj.GetComponent<UnitController>().PrepTurn();
 				obj.GetComponent<SpriteRenderer>().sprite = GetUnitSprite(unitName);
 				friends.Add(obj);
@@ -47,6 +48,7 @@ public class UnitManager : MonoBehaviour{
 				GameObject obj = Instantiate(UnitPrefab);
 				obj.name = "Enemy_" + i;
 				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
+				obj.GetComponent<UnitController>().team = 2;
 				obj.GetComponent<UnitController>().PrepTurn();
 				obj.GetComponent<SpriteRenderer>().sprite = GetUnitSprite(unitName);
 				enemies.Add(obj);

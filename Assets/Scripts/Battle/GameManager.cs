@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour{
-	public struct STurnOrderObject{
-		public GameObject pObj;
-		public float timeToMove;
-	}
-
-	public STurnOrderObject[] turnOrderObjecs;
+	public STurnOrderObject[] turnOrderObjects;
 	int numOrderObjects = 10;
 
     // Start is called before the first frame update
     void DoStart(){
 		firstStart = false;
-        turnOrderObjecs = new STurnOrderObject[numOrderObjects];
 		SetAllUnitsClockOrder();
+
+		CreateTurnOrderBlock();
     }
 
     // Update is called once per frame
@@ -23,6 +19,43 @@ public class GameManager : MonoBehaviour{
 		if(!fullInit){CheckInit();return;}
         if(firstStart){DoStart();}
     }
+
+
+	public struct STurnOrderObject{public int id; public float timeToMove; }
+	struct SOrder{ public int id;public float nextF; public float dT; }
+	void CreateTurnOrderBlock(){
+        // Get all units and fill in list
+		List<GameObject> lObjs = GameObject.Find("GameManager").GetComponent<GameManager>().GetAllUnits();
+		SOrder[] l = new SOrder[lObjs.Count];
+		for(int i = 0;i<lObjs.Count;i++){
+			l[i] = new SOrder();
+			l[i].id = lObjs[i].GetComponent<UnitController>().ID;
+			l[i].nextF = lObjs[i].GetComponent<UnitController>().GetNextClock();
+			l[i].dT = lObjs[i].GetComponent<UnitController>().clockInterval;
+		}		
+		
+		turnOrderObjects = new STurnOrderObject[numOrderObjects];
+		int index = 0,ii;
+		while(index < turnOrderObjects.Length){
+			float min = float.MaxValue;ii = 0;
+			for(int i = 0;i<l.Length;i++){ if(l[i].nextF < min){min = l[i].nextF;ii = i;} }
+
+			turnOrderObjects[index] = new STurnOrderObject();
+			turnOrderObjects[index].id = l[ii].id;
+			turnOrderObjects[index].timeToMove = l[ii].nextF;
+			index++;
+			l[ii].nextF += l[ii].dT;
+		}
+	}
+	public string GetTurnOrderString(){
+		if(turnOrderObjects.Length <= 0){return "";}
+		string s = "";
+		for(int i = 0;i < turnOrderObjects.Length; i++){
+			UnitController u = GlobalFuncs.GetUnit(turnOrderObjects[i].id).GetComponent<UnitController>();
+			s += string.Format("{0}:{1} {2}\n",i,u.team,u.unit.unitName);
+		}
+		return s;
+	}
 
 	bool fullInit = false, firstStart = true;
 	void CheckInit(){
@@ -33,7 +66,7 @@ public class GameManager : MonoBehaviour{
 		fullInit = true;
 	}
 
-	List<GameObject> GetAllUnits(){
+	public List<GameObject> GetAllUnits(){
 		List<GameObject> l = new List<GameObject>();
 		l.Add( GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().GetPlayerObject() );
 		l.AddRange( GameObject.Find("Units").GetComponent<UnitManager>().GetFriendlies() );
