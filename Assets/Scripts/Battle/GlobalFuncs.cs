@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class GlobalFuncs{
+	public static void DrawStuff(GameObject obj){
+		int x = obj.GetComponent<UnitController>().x;
+		int y = obj.GetComponent<UnitController>().y;
+		int dir = obj.GetComponent<UnitController>().mechNewDir;
+
+		// 	Set new position
+		obj.transform.position = GameObject.Find("Map").GetComponent<MapGenerator>().GetRealXYFromMapXY(x,y);
+
+		//	Set new rotation
+		obj.transform.eulerAngles = new Vector3(0f,0f, DirToDeg(dir));
+    }
+
 	public static float DirToDeg(string dir){return DirToDeg(DirStrToInt(dir));}
 	public static float DirToDeg(int dir){
 		if(dir == 0){return 0f;}

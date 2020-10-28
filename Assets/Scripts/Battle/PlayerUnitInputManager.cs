@@ -44,20 +44,8 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		}
 
 		if(doDraw)
-			DrawStuff();
+			GlobalFuncs.DrawStuff(obj);
 	}
-
-	void DrawStuff(){
-		int x = obj.GetComponent<UnitController>().x;
-		int y = obj.GetComponent<UnitController>().y;
-		int dir = obj.GetComponent<UnitController>().mechNewDir;
-
-		// 	Set new position
-		obj.transform.position = GameObject.Find("Map").GetComponent<MapGenerator>().GetRealXYFromMapXY(x,y);
-
-		//	Set new rotation
-		obj.transform.eulerAngles = new Vector3(0f,0f, GlobalFuncs.DirToDeg(dir));
-    }
 
     // Start is called before the first frame update
     void Start(){
@@ -68,8 +56,9 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		TextParser.GetInitPlayerUnit(out s, out x, out y,out dir);
 		obj.GetComponent<UnitController>().SetUnit(s,x,y,dir);
 		obj.GetComponent<UnitController>().PrepTurn();
+		obj.GetComponent<SpriteRenderer>().sprite = UnitManager.GetUnitSprite(s);
 
-		DrawStuff();
+		GlobalFuncs.DrawStuff(obj);
 
 		FinishedInit = true;
     }
