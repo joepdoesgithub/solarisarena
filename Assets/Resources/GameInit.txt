@@ -1,3 +1,4 @@
+[START]
 [FRIEND]
 Awesome AWS-8Q,0,0,N
 Akuma AKU-1XJ,-1,-1,NW
@@ -5,7 +6,8 @@ Black Lanner A,1,-1,NE
 [/FRIEND]
 
 [ENEMY]
-BattleMaster C 2,0,5,S
-Deimos D,-1,6,SW
-Griffin GRF-2N,1,6,SE
+BattleMaster C 2,0,2,S
+Deimos D,-1,2,SW
+Griffin GRF-2N,1,2,SE
 [/ENEMY]
+[/START]

@@ -13,6 +13,7 @@ public class UnitManager : MonoBehaviour{
     void Start(){
 		// Read the units
 		friends = new List<GameObject>();
+		enemies = new List<GameObject>();
 		string[] ls = TextParser.GetAllFriendlyLines();
 		if(ls.Length > 1){
 			for(int i = 1;i<ls.Length; i++){
@@ -25,16 +26,33 @@ public class UnitManager : MonoBehaviour{
 				obj.name = "Friendly_" + i;
 				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
 				obj.GetComponent<UnitController>().PrepTurn();
+				friends.Add(obj);
+
+				GlobalFuncs.DrawStuff(obj);
+			}
+		}
+
+		ls = TextParser.GetAllEnemyLines();
+		foreach(string s in ls)
+			Debug.Log(s);
+
+		if(ls.Length > 0){
+			for(int i = 0;i<ls.Length; i++){
+				string unitName = ls[i].Split(',')[0];
+				int x = int.Parse(ls[i].Split(',')[1]);
+				int y = int.Parse(ls[i].Split(',')[2]);
+				string dir = ls[i].Split(',')[3];
+
+				GameObject obj = Instantiate(UnitPrefab);
+				obj.name = "Enemy_" + i;
+				obj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
+				obj.GetComponent<UnitController>().PrepTurn();
+				enemies.Add(obj);
 
 				GlobalFuncs.DrawStuff(obj);
 			}
 		}
 
         FinishedInit = true;
-    }
-
-    // Update is called once per frame
-    void Update(){
-        
     }
 }
