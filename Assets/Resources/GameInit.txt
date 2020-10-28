@@ -2,8 +2,10 @@
 Awesome AWS-8Q,0,0,N
 Akuma AKU-1XJ,-1,-1,NW
 Black Lanner A,1,-1,NE
+[/FRIEND]
 
 [ENEMY]
 BattleMaster C 2,0,5,S
 Deimos D,-1,6,SW
 Griffin GRF-2N,1,6,SE
+[/ENEMY]
