@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour{
-	public STurnOrderObject[] turnOrderObjects;
-	int numOrderObjects = 10;
+	STurnOrderObject[] turnOrderObjects;
+	int numOrderObjects = 12;
 
     // Start is called before the first frame update
     void DoStart(){
@@ -20,8 +20,7 @@ public class GameManager : MonoBehaviour{
         if(firstStart){DoStart();}
     }
 
-
-	public struct STurnOrderObject{public int id; public float timeToMove; }
+	struct STurnOrderObject{public int id; public float timeToMove; }
 	struct SOrder{ public int id;public float nextF; public float dT; }
 	void CreateTurnOrderBlock(){
         // Get all units and fill in list
@@ -49,6 +48,7 @@ public class GameManager : MonoBehaviour{
 	}
 	public string GetTurnOrderString(){
 		if(turnOrderObjects.Length <= 0){return "";}
+
 		string s = "";
 		for(int i = 0;i < turnOrderObjects.Length; i++){
 			UnitController u = GlobalFuncs.GetUnit(turnOrderObjects[i].id).GetComponent<UnitController>();
