@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour{
 	STurnOrderObject[] turnOrderObjects;
 	int numOrderObjects = 12;
 
+	public bool SetNext = true;
+
     // Start is called before the first frame update
     void DoStart(){
 		firstStart = false;
@@ -18,6 +20,12 @@ public class GameManager : MonoBehaviour{
     void Update(){
 		if(!fullInit){CheckInit();return;}
         if(firstStart){DoStart();}
+
+		if(SetNext){
+			SetNext = false;
+			CreateTurnOrderBlock();
+			GlobalFuncs.GetUnit( turnOrderObjects[0].id ).GetComponent<UnitController>().GoNext = true;
+		}
     }
 
 	struct STurnOrderObject{public int id; public float timeToMove; }

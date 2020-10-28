@@ -20,6 +20,9 @@ public class PlayerUnitInputManager : MonoBehaviour{
 
 		// Confirm your move
 		if(Input.GetKeyDown(KeyCode.Return)){
+			obj.GetComponent<UnitController>().FinishTurn();
+			doGetInput = false;
+			GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
 			doDraw=true;
 		}
 		
@@ -57,6 +60,7 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		TextParser.GetInitPlayerUnit(out s, out x, out y,out dir);
 		obj.GetComponent<UnitController>().SetUnit(s,x,y,dir);
 		obj.GetComponent<UnitController>().team = 1;
+		obj.GetComponent<UnitController>().IsPlayer = true;
 		obj.GetComponent<UnitController>().PrepTurn();
 		obj.GetComponent<SpriteRenderer>().sprite = UnitManager.GetUnitSprite(s);
 

@@ -5,6 +5,8 @@ using UnityEngine;
 public class UnitController : MonoBehaviour{
 	public int ID;
 	public int team;
+	public bool IsPlayer = false;
+	public bool GoNext = false;
 
 	public int x = 0;
 	public int y = 0;
@@ -18,6 +20,23 @@ public class UnitController : MonoBehaviour{
 	public float GetNextClock(){return lastClock + clockInterval + clockOrder;}
 
 	public Unit unit;
+
+	void Update(){
+		if(GoNext){
+			GoNext = false;
+			PrepTurn();
+
+			if(IsPlayer){
+				GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().GetPlayerObject().GetComponent<UnitController>().PrepTurn();
+				GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().doGetInput = true;
+				return;
+			}
+
+			Debug.Log(string.Format("AI: {0} {1} {2}",unit.unitName,team,ID));
+			FinishTurn();
+			GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
+		}
+	}
 
 	public void SetUnit(string name, int x, int y, string dir){
 		unit = new Unit(name);
@@ -33,6 +52,8 @@ public class UnitController : MonoBehaviour{
 	public void FinishTurn(){
 		mechDir = mechNewDir;
 		speed = newSpeed;
+		//	[TODO]	temporary
+		lastClock = GetNextClock();
 	}
 
 	public void ChangeSpeed(int dir){
