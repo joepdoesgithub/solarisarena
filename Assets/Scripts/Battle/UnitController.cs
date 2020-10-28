@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitController : MonoBehaviour{
+	public int ID;
+
 	public int x = 0;
 	public int y = 0;
 
 	public int mechDir = 0, mechNewDir;
 	public int speed = 0, newSpeed;
+
+	public float lastClock = 0f;
+	public float clockInterval = 1f;
+	public float clockOrder = 0f;
+	public float GetNextClock(){return lastClock + clockInterval + clockOrder;}
 
 	public Unit unit;
 
@@ -66,4 +73,6 @@ public class UnitController : MonoBehaviour{
 		}
 		Debug.Log(s + ". F: " + mechNewDir);
 	}
+
+	void Start(){ID = GlobalFuncs.GetNewID();}
 }

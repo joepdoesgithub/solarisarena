@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class GlobalFuncs{
+	static string UsedUnitIds = "";
+	public static int GetNewID(){
+		System.Random rnd = new System.Random();
+		int i = rnd.Next(0,10000);
+		while(UsedUnitIds.Contains("|"+i.ToString()+"|"))
+			i = rnd.Next(0,10000);
+		UsedUnitIds += "|"+i+"|";
+		return i;
+	}
+
 	public static void DrawStuff(GameObject obj){
 		int x = obj.GetComponent<UnitController>().x;
 		int y = obj.GetComponent<UnitController>().y;

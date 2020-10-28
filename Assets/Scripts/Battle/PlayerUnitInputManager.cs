@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerUnitInputManager : MonoBehaviour{
 	public bool FinishedInit = false;
 
+	public GameObject GetPlayerObject(){return obj;}
 	GameObject obj = null;
 	public GameObject objPrefab;
 

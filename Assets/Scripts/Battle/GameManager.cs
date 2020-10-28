@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour{
     void DoStart(){
 		firstStart = false;
         turnOrderObjecs = new STurnOrderObject[numOrderObjects];
+		SetAllUnitsClockOrder();
     }
 
     // Update is called once per frame
@@ -30,5 +31,26 @@ public class GameManager : MonoBehaviour{
 		
 		Debug.Log("GameManager: Initiation of all objects is finished");
 		fullInit = true;
+	}
+
+	List<GameObject> GetAllUnits(){
+		List<GameObject> l = new List<GameObject>();
+		l.Add( GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().GetPlayerObject() );
+		l.AddRange( GameObject.Find("Units").GetComponent<UnitManager>().GetFriendlies() );
+		l.AddRange( GameObject.Find("Units").GetComponent<UnitManager>().GetEnemies() );
+		return l;
+	}
+
+	void SetAllUnitsClockOrder(){
+		List<GameObject> l = GetAllUnits();
+		System.Random rnd = new System.Random();
+
+		float diff = 0.0000f;
+		while(l.Count > 0){
+			int ii = rnd.Next(0,l.Count);
+			l[ii].GetComponent<UnitController>().clockOrder = diff;
+			diff += 0.0001f;
+			l.RemoveAt(ii);
+		}
 	}
 }

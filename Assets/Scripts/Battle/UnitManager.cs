@@ -9,6 +9,8 @@ public class UnitManager : MonoBehaviour{
 
 	List<GameObject> friends;
 	List<GameObject> enemies;
+	public List<GameObject> GetFriendlies(){return friends;}
+	public List<GameObject> GetEnemies(){return enemies;}
 
     // Start is called before the first frame update
     void Start(){
