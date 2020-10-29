@@ -20,7 +20,7 @@ public class UnitController : MonoBehaviour{
 	public float GetNextClock(){return lastClock + clockInterval + clockOrder;}
 
 	public Unit unit;
-	public GameObject[] tObjs;
+	public GameObject[] tObjs;	// [TEMP]
 
 	void Update(){
 		if(GoNext){
@@ -105,6 +105,7 @@ public class UnitController : MonoBehaviour{
 		newX = (int)pos.x;
 		newY = (int)pos.y;
 
+		//	[TEMP]
 		if(tObjs.Length > 0){
 			foreach(GameObject obj in tObjs)
 				Destroy(obj);
@@ -118,6 +119,7 @@ public class UnitController : MonoBehaviour{
 			tx = (int)v.x;ty = (int)v.y;
 			GlobalFuncs.DrawStuff(tObjs[i]);
 		}
+		//	/[TEMP]
 	}
 
 	public void TurnLeft(){Turn(1);}
@@ -139,10 +141,12 @@ public class UnitController : MonoBehaviour{
 			}
 		}
 
+		//	[TEMP]
 		if(tObjs.Length > 0){
 			foreach(GameObject obj in tObjs)
 				Destroy(obj);
 		}
+		//	/[TEMP]
 	}
 
 	void Start(){ID = GlobalFuncs.GetNewID();}
