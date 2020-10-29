@@ -20,6 +20,7 @@ public class UnitController : MonoBehaviour{
 	public float GetNextClock(){return lastClock + clockInterval + clockOrder;}
 
 	public Unit unit;
+	public GameObject[] tObjs;
 
 	void Update(){
 		if(GoNext){
@@ -50,12 +51,17 @@ public class UnitController : MonoBehaviour{
 		newX = x; newY = y;
 	}
 
-	public void FinishTurn(){
+	public bool FinishTurn(){
+		if(newSpeed > 0 && newX == x && newY == y && mechNewDir == mechDir)
+			return false;
+
 		mechDir = mechNewDir;
 		speed = newSpeed;
 		x = newX; y = newY;
 		//	[TODO]	temporary
 		lastClock = GetNextClock();
+
+		return true;
 	}
 
 	public void ChangeSpeed(int dir){
@@ -75,21 +81,51 @@ public class UnitController : MonoBehaviour{
 		}
 	}
 
+	void ResetMove(){
+		Debug.Log(string.Format("dir: {0} newDir: {1}",mechDir,mechNewDir));
+		mechNewDir = mechDir;
+		newX = x; newY = y;
+	}
+
 	public void Move(int dir){
 		// Can you move backwards?
 		if(dir < 0 && newSpeed > unit.walk){
 			GlobalFuncs.PostToConsole(string.Format("Can't move backwards with speed > {0}",unit.walk));
+			return;
+		}
+		// Do you have speed to move?
+		if(dir != 0 && newSpeed == 0){
+			GlobalFuncs.PostToConsole(string.Format("Can't move forward or backward with Spd: 0"));
+			return;
+		}
+		ResetMove();
+
+		Vector2 pos = MapGenerator.GetNewCoords(x,y, (dir > 0 ? mechDir : GlobalFuncs.GetOppositeDir(mechDir) ) );
+		Debug.Log(string.Format("Move, x: {0} y: {1}",(int)pos.x, (int)pos.y));
+		newX = (int)pos.x;
+		newY = (int)pos.y;
+
+		if(tObjs.Length > 0){
+			foreach(GameObject obj in tObjs)
+				Destroy(obj);
+		}
+		tObjs = new GameObject[5];
+		int tx = newX, ty = newY;
+		for(int i = 0;i<5;i++){
+			Vector2 v = MapGenerator.GetNewCoords(tx,ty, (dir > 0 ? mechDir : GlobalFuncs.GetOppositeDir(mechDir) ) );
+			tObjs[i] = Instantiate( GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().objPrefab );
+			tObjs[i].GetComponent<UnitController>().SetUnit("Awesome AWS-8Q",tx,ty, GlobalFuncs.DirIntToStr(dir) );
+			tx = (int)v.x;ty = (int)v.y;
+			GlobalFuncs.DrawStuff(tObjs[i]);
 		}
 	}
 
 	public void TurnLeft(){Turn(1);}
 	public void TurnRight(){Turn(-1);}
 	void Turn(int dir){
-		string s = string.Format("Old: {0}, dir {1}",mechNewDir,dir);
+		ResetMove();
 		mechNewDir += dir;
-		s += " |" + mechNewDir;
 		mechNewDir = (mechNewDir > 5 ? 0 : (mechNewDir < 0 ? 5 : mechNewDir));
-		s += "| -> " + mechNewDir;
 
 		if(dir == -1){	//	Turn Right
 			if(mechDir - mechNewDir > 1 || (mechDir == 0 && mechNewDir == 4) || (mechDir == 1 && mechNewDir == 5)){
@@ -102,7 +138,11 @@ public class UnitController : MonoBehaviour{
 				GlobalFuncs.PostToConsole("Can't turn farther to the left");
 			}
 		}
-		Debug.Log(s + ". F: " + mechNewDir);
+
+		if(tObjs.Length > 0){
+			foreach(GameObject obj in tObjs)
+				Destroy(obj);
+		}
 	}
 
 	void Start(){ID = GlobalFuncs.GetNewID();}

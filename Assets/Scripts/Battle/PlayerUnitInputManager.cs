@@ -20,10 +20,14 @@ public class PlayerUnitInputManager : MonoBehaviour{
 
 		// Confirm your move
 		if(Input.GetKeyDown(KeyCode.Return)){
-			obj.GetComponent<UnitController>().FinishTurn();
-			doGetInput = false;
-			GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
+			bool legalMove = obj.GetComponent<UnitController>().FinishTurn();
 			doDraw=true;
+
+			if(legalMove){			
+				doGetInput = false;
+				GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
+			}else
+				GlobalFuncs.PostToConsole("Can't finish move, illegal move, likely standing still with >0 speed.");
 		}
 		
 		//	Speed up
@@ -36,14 +40,14 @@ public class PlayerUnitInputManager : MonoBehaviour{
 			obj.GetComponent<UnitController>().ChangeSpeed(-1);
 			doDraw=true;
 		}
-		//	
-		else if(Input.GetKeyDown(KeyCode.A)){
-			obj.GetComponent<UnitController>().TurnLeft();
+		//	Move forward
+		else if(Input.GetKeyDown(KeyCode.W)){
+			obj.GetComponent<UnitController>().Move(1);
 			doDraw=true;
 		}
-		//	Turn left
-		else if(Input.GetKeyDown(KeyCode.A)){
-			obj.GetComponent<UnitController>().TurnLeft();
+		//	Move Backward
+		else if(Input.GetKeyDown(KeyCode.S)){
+			obj.GetComponent<UnitController>().Move(-1);
 			doDraw=true;
 		}
 		//	Turn left

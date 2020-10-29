@@ -64,4 +64,5 @@ public static class GlobalFuncs{
 		else if(dir == "SE"){return 4;}
 		else{return 5;}
 	}
+	public static int GetOppositeDir(int dir){ return ( dir + 3 > 5 ? dir - 3 : dir + 3 ); }
 }
