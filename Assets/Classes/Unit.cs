@@ -5,5 +5,5 @@ public class Unit{
 		unitName = name;
 	}
 
-	public int walk;
+	public int walk = 3;
 }

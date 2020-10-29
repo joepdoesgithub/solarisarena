@@ -27,13 +27,23 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		}
 		
 		//	Speed up
-		else if(Input.GetKeyDown(KeyCode.W)){
+		else if(Input.GetKeyDown(KeyCode.UpArrow)){
 			obj.GetComponent<UnitController>().ChangeSpeed(1);
 			doDraw=true;
 		}
 		//	Speed down
-		else if(Input.GetKeyDown(KeyCode.S)){
+		else if(Input.GetKeyDown(KeyCode.DownArrow)){
 			obj.GetComponent<UnitController>().ChangeSpeed(-1);
+			doDraw=true;
+		}
+		//	
+		else if(Input.GetKeyDown(KeyCode.A)){
+			obj.GetComponent<UnitController>().TurnLeft();
+			doDraw=true;
+		}
+		//	Turn left
+		else if(Input.GetKeyDown(KeyCode.A)){
+			obj.GetComponent<UnitController>().TurnLeft();
 			doDraw=true;
 		}
 		//	Turn left
