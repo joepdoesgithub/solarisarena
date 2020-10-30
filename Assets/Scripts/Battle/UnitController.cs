@@ -33,7 +33,8 @@ public class UnitController : MonoBehaviour{
 				return;
 			}
 
-			Debug.Log(string.Format("AI: {0} {1} {2}\t{3}",unit.unitName,team,ID,GetNextClock()));
+			if(GlobalFuncs.DoAIDebug)
+				Debug.Log(string.Format("AI: {0} {1} {2}\t{3}",unit.unitName,team,ID,GetNextClock()));
 			FinishTurn();
 			GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
 		}
@@ -104,22 +105,6 @@ public class UnitController : MonoBehaviour{
 		Debug.Log(string.Format("Move, x: {0} y: {1}",(int)pos.x, (int)pos.y));
 		newX = (int)pos.x;
 		newY = (int)pos.y;
-
-		//	[TEMP]
-		if(tObjs.Length > 0){
-			foreach(GameObject obj in tObjs)
-				Destroy(obj);
-		}
-		tObjs = new GameObject[5];
-		int tx = newX, ty = newY;
-		for(int i = 0;i<5;i++){
-			Vector2 v = MapGenerator.GetNewCoords(tx,ty, (dir > 0 ? mechDir : GlobalFuncs.GetOppositeDir(mechDir) ) );
-			tObjs[i] = Instantiate( GameObject.Find("PlayerManager").GetComponent<PlayerUnitInputManager>().objPrefab );
-			tObjs[i].GetComponent<UnitController>().SetUnit("Awesome AWS-8Q",tx,ty, GlobalFuncs.DirIntToStr(dir) );
-			tx = (int)v.x;ty = (int)v.y;
-			GlobalFuncs.DrawStuff(tObjs[i]);
-		}
-		//	/[TEMP]
 	}
 
 	public void TurnLeft(){Turn(1);}

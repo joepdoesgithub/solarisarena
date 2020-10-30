@@ -44,21 +44,24 @@ public class MapGenerator : MonoBehaviour{
 		arr[1] = new SAdjHex(x+1, (x%2==0 ? y : y+1),"NE");
 		arr[2] = new SAdjHex(x+1, (x%2==0 ? y-1 : y),"SE");
 		arr[3] = new SAdjHex(x,y-1,"S");
-		arr[4] = new SAdjHex(x-1, (x%2==0 ? y : y+1),"SW");
-		arr[5] = new SAdjHex(x-1, (x%2==0 ? y-1 : y),"NW");
+		arr[4] = new SAdjHex(x-1, (x%2==0 ? y-1 : y),"SW");
+		arr[5] = new SAdjHex(x-1, (x%2==0 ? y : y+1),"NW");
 		return arr;
 	}
 	public static Vector2 GetNewCoords(int x, int y, int dir){
 		string sDir = GlobalFuncs.DirIntToStr(dir);
+		string so = string.Format("dir: {0} sDir {1}\t({2},{3})",dir,sDir,x,y);
 		SAdjHex[] arr = GetAdjHexes(x,y);
 		Vector2 v = new Vector2();
 		foreach(SAdjHex s in arr){
 			if(s.dir == sDir){
 				v.x = s.x;
 				v.y = s.y;
-				return v;
+				so += string.Format(" ({0},{1})",v.x,v.y);
+				// return v;
 			}
 		}
+		Debug.Log(so);
 		return v;
 	}
 }
