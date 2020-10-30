@@ -108,6 +108,12 @@ public class UnitController : MonoBehaviour{
 	public void TurnLeft(){Turn(1);}
 	public void TurnRight(){Turn(-1);}
 	void Turn(int dir){
+		//	Do you have speed to move?
+		if(dir != 0 && newSpeed == 0){
+			GlobalFuncs.PostToConsole(string.Format("Can't turn with Spd: 0"));
+			return;
+		}
+
 		ResetMove();
 		mechNewDir += dir;
 		mechNewDir = (mechNewDir > 5 ? 0 : (mechNewDir < 0 ? 5 : mechNewDir));
