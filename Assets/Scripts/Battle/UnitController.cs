@@ -21,6 +21,8 @@ public class UnitController : MonoBehaviour{
 
 	public Unit unit;
 
+	public void GetGhostCoords(out int x_, out int y_, out int dir, out string unitName){x_=newX;y_=newY;dir = mechNewDir;unitName = unit.unitName;}
+
 	void Update(){
 		if(GoNext){
 			GoNext = false;

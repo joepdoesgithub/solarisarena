@@ -7,6 +7,8 @@ public class PlayerUnitInputManager : MonoBehaviour{
 
 	public GameObject GetPlayerObject(){return obj;}
 	GameObject obj = null;
+	GameObject objGhost = null;
+	bool showGhost = false;
 	public GameObject objPrefab;
 
 	public bool doGetInput = false;
@@ -22,6 +24,7 @@ public class PlayerUnitInputManager : MonoBehaviour{
 		if(Input.GetKeyDown(KeyCode.Return)){
 			bool legalMove = obj.GetComponent<UnitController>().FinishTurn();
 			doDraw=true;
+			if(objGhost != null){Destroy(objGhost);}
 
 			if(legalMove){			
 				doGetInput = false;
@@ -63,23 +66,37 @@ public class PlayerUnitInputManager : MonoBehaviour{
 
 		if(doDraw)
 			GlobalFuncs.DrawStuff(obj);
+
+		int x,y,dir;string unitName;
+		obj.GetComponent<UnitController>().GetGhostCoords(out x, out y, out dir, out unitName);
+		if(objGhost == null)
+			objGhost = SpawnUnit(unitName,"PlayerGhost",x,y,GlobalFuncs.DirIntToStr(dir),true);
+		else
+			objGhost.GetComponent<UnitController>().SetUnit(unitName,x,y,GlobalFuncs.DirIntToStr(dir));
+		
+		GlobalFuncs.DrawStuff(objGhost);
 	}
 
     // Start is called before the first frame update
     void Start(){
-        obj = Instantiate(objPrefab);
-		obj.name = "PlayerUnit";
+		string unitName,dir;int x,y;
+		TextParser.GetInitPlayerUnit(out unitName, out x, out y,out dir);
 
-		string s,dir;int x,y;
-		TextParser.GetInitPlayerUnit(out s, out x, out y,out dir);
-		obj.GetComponent<UnitController>().SetUnit(s,x,y,dir);
-		obj.GetComponent<UnitController>().team = 1;
-		obj.GetComponent<UnitController>().IsPlayer = true;
-		obj.GetComponent<UnitController>().PrepTurn();
-		obj.GetComponent<SpriteRenderer>().sprite = UnitManager.GetUnitSprite(s);
+		obj = SpawnUnit(unitName, "PlayerUnit",x,y,dir);
 
 		GlobalFuncs.DrawStuff(obj);
 
 		FinishedInit = true;
     }
+
+	GameObject SpawnUnit(string unitName, string objName, int x, int y, string dir, bool ghost = false){
+        GameObject lObj = Instantiate(objPrefab);
+		lObj.name = objName;
+		lObj.GetComponent<UnitController>().SetUnit(unitName,x,y,dir);
+		lObj.GetComponent<UnitController>().team = 1;
+		lObj.GetComponent<UnitController>().IsPlayer = true;
+		lObj.GetComponent<UnitController>().PrepTurn();
+		lObj.GetComponent<SpriteRenderer>().sprite = UnitManager.GetUnitSprite(unitName);
+		return lObj;
+	}
 }
