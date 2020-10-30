@@ -8,8 +8,8 @@ public class UnitController : MonoBehaviour{
 	public bool IsPlayer = false;
 	public bool GoNext = false;
 
-	public int x = 0;
-	public int y = 0;
+	public int x = 0, newX;
+	public int y = 0, newY;
 
 	public int mechDir = 0, mechNewDir;
 	public int speed = 0, newSpeed;
@@ -32,7 +32,8 @@ public class UnitController : MonoBehaviour{
 				return;
 			}
 
-			Debug.Log(string.Format("AI: {0} {1} {2}",unit.unitName,team,ID));
+			if(GlobalFuncs.DoAIDebug)
+				Debug.Log(string.Format("AI: {0} {1} {2}\t{3}",unit.unitName,team,ID,GetNextClock()));
 			FinishTurn();
 			GameObject.Find("GameManager").GetComponent<GameManager>().SetNext = true;
 		}
@@ -47,13 +48,20 @@ public class UnitController : MonoBehaviour{
 	public void PrepTurn(){
 		mechNewDir = mechDir;
 		newSpeed = speed;
+		newX = x; newY = y;
 	}
 
-	public void FinishTurn(){
+	public bool FinishTurn(){
+		if(newSpeed > 0 && newX == x && newY == y && mechNewDir == mechDir)
+			return false;
+
 		mechDir = mechNewDir;
 		speed = newSpeed;
+		x = newX; y = newY;
 		//	[TODO]	temporary
 		lastClock = GetNextClock();
+
+		return true;
 	}
 
 	public void ChangeSpeed(int dir){
@@ -61,9 +69,9 @@ public class UnitController : MonoBehaviour{
 		if(newSpeed > (int)(1.5f*unit.walk + 0.5f)){
 			newSpeed = (int)(1.5f*unit.walk + 0.5f);
 			GlobalFuncs.PostToConsole(string.Format("Can't accelerate further, max speed forward is {0}",(int)(1.5f*unit.walk + 0.5f)));
-		}else if(newSpeed < -1 * unit.walk){
-			newSpeed = -1 * unit.walk;
-			GlobalFuncs.PostToConsole(string.Format("Can't move backwards faster, max speed backwards is {0}",-1 * unit.walk));
+		}else if(newSpeed < 0){
+			newSpeed = 0;
+			GlobalFuncs.PostToConsole(string.Format("Can't have a negative speed"));
 		}else if(newSpeed > speed + 1){
 			newSpeed = speed + 1;
 			GlobalFuncs.PostToConsole(string.Format("Can't accelerate faster, max speed increase is 1"));
@@ -73,14 +81,36 @@ public class UnitController : MonoBehaviour{
 		}
 	}
 
+	void ResetMove(){
+		mechNewDir = mechDir;
+		newX = x; newY = y;
+	}
+
+	public void Move(int dir){
+		// Can you move backwards?
+		if(dir < 0 && newSpeed > unit.walk){
+			GlobalFuncs.PostToConsole(string.Format("Can't move backwards with speed > {0}",unit.walk));
+			return;
+		}
+		// Do you have speed to move?
+		if(dir != 0 && newSpeed == 0){
+			GlobalFuncs.PostToConsole(string.Format("Can't move forward or backward with Spd: 0"));
+			return;
+		}
+		ResetMove();
+
+		Vector2 pos = MapGenerator.GetNewCoords(x,y, (dir > 0 ? mechDir : GlobalFuncs.GetOppositeDir(mechDir) ) );
+		Debug.Log(string.Format("Move, x: {0} y: {1}",(int)pos.x, (int)pos.y));
+		newX = (int)pos.x;
+		newY = (int)pos.y;
+	}
+
 	public void TurnLeft(){Turn(1);}
 	public void TurnRight(){Turn(-1);}
 	void Turn(int dir){
-		string s = string.Format("Old: {0}, dir {1}",mechNewDir,dir);
+		ResetMove();
 		mechNewDir += dir;
-		s += " |" + mechNewDir;
 		mechNewDir = (mechNewDir > 5 ? 0 : (mechNewDir < 0 ? 5 : mechNewDir));
-		s += "| -> " + mechNewDir;
 
 		if(dir == -1){	//	Turn Right
 			if(mechDir - mechNewDir > 1 || (mechDir == 0 && mechNewDir == 4) || (mechDir == 1 && mechNewDir == 5)){
@@ -93,7 +123,6 @@ public class UnitController : MonoBehaviour{
 				GlobalFuncs.PostToConsole("Can't turn farther to the left");
 			}
 		}
-		Debug.Log(s + ". F: " + mechNewDir);
 	}
 
 	void Start(){ID = GlobalFuncs.GetNewID();}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class GlobalFuncs{
+	public static bool DoAIDebug = false;
+
 	static string UsedUnitIds = "";
 	public static int GetNewID(){
 		System.Random rnd = new System.Random();
@@ -53,7 +55,7 @@ public static class GlobalFuncs{
 		else if(dir == 1){return "NW";}
 		else if(dir == 2){return "SW";}
 		else if(dir == 3){return "S";}
-		else if(dir == 4){return "SW";}
+		else if(dir == 4){return "SE";}
 		else{return "NE";}
 	}
 	public static int DirStrToInt(string dir){
@@ -64,4 +66,5 @@ public static class GlobalFuncs{
 		else if(dir == "SE"){return 4;}
 		else{return 5;}
 	}
+	public static int GetOppositeDir(int dir){ return ( dir + 3 > 5 ? dir - 3 : dir + 3 ); }
 }
