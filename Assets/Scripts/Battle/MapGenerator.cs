@@ -50,18 +50,15 @@ public class MapGenerator : MonoBehaviour{
 	}
 	public static Vector2 GetNewCoords(int x, int y, int dir){
 		string sDir = GlobalFuncs.DirIntToStr(dir);
-		string so = string.Format("dir: {0} sDir {1}\t({2},{3})",dir,sDir,x,y);
 		SAdjHex[] arr = GetAdjHexes(x,y);
 		Vector2 v = new Vector2();
 		foreach(SAdjHex s in arr){
 			if(s.dir == sDir){
 				v.x = s.x;
 				v.y = s.y;
-				so += string.Format(" ({0},{1})",v.x,v.y);
-				// return v;
+				return v;
 			}
 		}
-		Debug.Log(so);
 		return v;
 	}
 }

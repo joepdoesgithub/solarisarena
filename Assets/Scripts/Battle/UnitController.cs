@@ -20,7 +20,6 @@ public class UnitController : MonoBehaviour{
 	public float GetNextClock(){return lastClock + clockInterval + clockOrder;}
 
 	public Unit unit;
-	public GameObject[] tObjs;	// [TEMP]
 
 	void Update(){
 		if(GoNext){
@@ -83,7 +82,6 @@ public class UnitController : MonoBehaviour{
 	}
 
 	void ResetMove(){
-		Debug.Log(string.Format("dir: {0} newDir: {1}",mechDir,mechNewDir));
 		mechNewDir = mechDir;
 		newX = x; newY = y;
 	}
@@ -125,13 +123,6 @@ public class UnitController : MonoBehaviour{
 				GlobalFuncs.PostToConsole("Can't turn farther to the left");
 			}
 		}
-
-		//	[TEMP]
-		if(tObjs.Length > 0){
-			foreach(GameObject obj in tObjs)
-				Destroy(obj);
-		}
-		//	/[TEMP]
 	}
 
 	void Start(){ID = GlobalFuncs.GetNewID();}
